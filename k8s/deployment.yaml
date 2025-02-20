@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booksmanagement-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: booksmanagement-api
+  template:
+    metadata:
+      labels:
+        app: booksmanagement-api
+    spec:
+      containers:
+        - name: booksmanagement-api
+          image: engcountio/booksmanagementapi:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: booksmanagement-api-service
+spec:
+  selector:
+    app: booksmanagement-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
